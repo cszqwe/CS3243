@@ -1,5 +1,14 @@
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Population {
 
+	public static final int DEFAULT_POPULATION = 50;
+	
     Individual[] individuals;
 
     /*
@@ -18,6 +27,33 @@ public class Population {
             }
         }
     }
+    
+    public Population(String filepath, int populationSize) {
+    	try {
+			List<String> lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.US_ASCII);
+			individuals = new Individual[populationSize];
+	    	for (int i = 0; i < size(); i++) {
+	            Individual newIndividual = new Individual();
+	            newIndividual.importFromString(lines.get(i));
+	            saveIndividual(i, newIndividual);
+	        }
+    	} catch (IOException e) {
+			System.out.println("Error reading file: " + e.getMessage());
+			return;
+		}
+    }
+    
+    public void saveToFile(String filepath) {
+    	List<String> lines = new ArrayList<String>();
+    	for (int i = 0; i < size(); i++) {
+            lines.add(individuals[i].toString());
+        }
+    	try {
+			Files.write(Paths.get(filepath), lines, StandardCharsets.US_ASCII);
+		} catch (IOException e) {
+			System.out.println("Error writing file: " + e.getMessage());
+		}
+    }
 
     /* Getters */
     public Individual getIndividual(int index) {
@@ -34,7 +70,7 @@ public class Population {
         }
         return fittest;
     }
-
+    
     /* Public methods */
     // Get population size
     public int size() {

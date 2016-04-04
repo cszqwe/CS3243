@@ -62,6 +62,29 @@ public class Individual {
         }
         player = new PlayerSkeleton(weightVector);
     }
+    
+    public void importFromString(String str) {
+    	String[] nums = str.split("&");
+    	if (nums.length != PlayerSkeleton.NUM_OF_FEATURES) {
+    		System.out.println("Incompatible version");
+    		generateIndividual();
+    		return;
+    	}
+    	
+    	for (int i = 0; i < PlayerSkeleton.NUM_OF_FEATURES; i++) {
+    		weightVector[i] = Double.parseDouble(nums[i]);
+    	}
+    	player = new PlayerSkeleton(weightVector);
+    }
+    
+    @Override
+    public String toString() {
+    	String[] strs = new String[PlayerSkeleton.NUM_OF_FEATURES];
+    	for (int i = 0; i < PlayerSkeleton.NUM_OF_FEATURES; i++) {
+    		strs[i] = String.valueOf(weightVector[i]);
+    	}
+		return String.join("&", strs);
+    }
 
     /* Getters and setters */
     // Use this if you want to create individuals with different gene lengths

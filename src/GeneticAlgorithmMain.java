@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class GeneticAlgorithmMain {
 
     public static void main(String[] args) {
@@ -12,6 +16,15 @@ public class GeneticAlgorithmMain {
             generationCount++;
             System.out.println("Generation: " + generationCount + " Fittest: " + myPop.getFittest().getFitness());
             myPop = Algorithm.evolvePopulation(myPop);
+            if (generationCount != 0 && generationCount % 100 == 0) {
+            	try {
+					Files.createDirectory(Paths.get("data"));
+				} catch (IOException e) {
+					System.out.println("Error enter directory: " + e.getMessage());
+				}
+            	
+            	myPop.saveToFile("data/pop" + generationCount);
+            }
         }
         System.out.println("Solution found!");
         System.out.println("Generation: " + generationCount);
