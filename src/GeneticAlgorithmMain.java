@@ -8,15 +8,19 @@ public class GeneticAlgorithmMain {
 
 
         // Create an initial population
-        Population myPop = new Population(50, true);
-        
+        //Population myPop = new Population(100, true);
+    	Population myPop = new Population("data/pop20", 50);
         // Evolve our population until we reach an optimum solution
         int generationCount = 0;
-        while (myPop.getFittest().getFitness() < 1000) {
+        long time1 = System.currentTimeMillis();
+        while (myPop.getFittest().getFitness() < 10000000) {
+        	long time2 = System.currentTimeMillis();
+            System.out.println("Time " + (time2 - time1));
+            time1 = time2;
             generationCount++;
             System.out.println("Generation: " + generationCount + " Fittest: " + myPop.getFittest().getFitness());
             myPop = Algorithm.evolvePopulation(myPop);
-            if (generationCount != 0 && generationCount % 100 == 0) {
+            if (generationCount != 0 && generationCount % 10 == 0) {
             	try {
 					Files.createDirectory(Paths.get("data"));
 				} catch (IOException e) {

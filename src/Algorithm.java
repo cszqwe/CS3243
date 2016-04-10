@@ -12,12 +12,12 @@ public class Algorithm {
     // Evolve a population
     public static Population evolvePopulation(Population pop) {
         Population newPopulation = new Population(pop.size(), false);
-
+        //long startMili=System.currentTimeMillis();
         // Keep our best individual
         if (elitism) {
             newPopulation.saveIndividual(0, pop.getFittest());
         }
-
+        //long time1 = System.currentTimeMillis();
         // Crossover population
         int elitismOffset;
         if (elitism) {
@@ -31,14 +31,23 @@ public class Algorithm {
             Individual indiv1 = tournamentSelection(pop);
             Individual indiv2 = tournamentSelection(pop);
             Individual newIndiv = crossover(indiv1, indiv2);
+            //newIndiv.updateWithGenes();
             newPopulation.saveIndividual(i, newIndiv);
         }
+        //long time2=System.currentTimeMillis();
 
         // Mutate population
         for (int i = elitismOffset; i < newPopulation.size(); i++) {
             mutate(newPopulation.getIndividual(i));
+            //newPopulation.getIndividual(i).updateWithGenes();
         }
-
+        //long time3=System.currentTimeMillis();
+        //System.out.println(startMili);
+        //System.out.println(time1);
+        //System.out.println(time2);
+        //System.out.println(time3);
+        
+        //System.out.println(" Time 1: " + (time1 - startMili) + " Time 2: " + (time2 - time1) + " Time 3: " + (time3 - time2));
         return newPopulation;
     }
 
@@ -46,31 +55,34 @@ public class Algorithm {
     private static Individual crossover(Individual indiv1, Individual indiv2) {
         Individual newSol = new Individual();
         // Loop through genes
-        for (int i = 0; i < indiv1.size(); i++) {
+        for (int i = 0; i < indiv1.size()/8; i++) {
             // Crossover
             if (Math.random() <= uniformRate) {
-                newSol.setGene(i, indiv1.getGene(i));
+            	newSol.setWeight(i, indiv1.getWeight(i));
             } else {
-                newSol.setGene(i, indiv2.getGene(i));
+            	newSol.setWeight(i, indiv2.getWeight(i));
             }
         }
+        //newSol.updateGenes();
         return newSol;
     }
 
     // Mutate an individual
     private static void mutate(Individual indiv) {
         // Loop through genes
-        for (int i = 0; i < indiv.size(); i++) {
+        for (int i = 0; i < indiv.size()/8; i++) {
             if (Math.random() <= mutationRate) {
-                // Create random gene
-                byte gene = (byte) Math.round(Math.random());
-                indiv.setGene(i, gene);
+                    double randomVal = (Math.random() - 0.5) * 100;
+                    indiv.setWeight(i,randomVal);
+                   // putFloat(genes, randomVal, i * 8);
             }
         }
+        //indiv.updateGenes();
     }
 
     // Select individuals for crossover
     private static Individual tournamentSelection(Population pop) {
+    	
         // Create a tournament population
         Population tournament = new Population(tournamentSize, false);
         // For each place in the tournament get a random individual

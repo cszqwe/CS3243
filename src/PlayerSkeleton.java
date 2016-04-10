@@ -16,9 +16,10 @@ public class PlayerSkeleton {
 	 * 25 Score in this round
 	 * 26 Lost or not
 	 */
-	static final int NUM_OF_FEATURES = 8;
+	static final int NUM_OF_FEATURES = 5;
+	int firnessScore = -1;
 	double featureFactor[] = new double[NUM_OF_FEATURES];
-	double weightVector[] = { -2, 1, -3, -1, -1, -1, 1, -1000};// The corresponding weightVector, which would be got by learning lots of game object.
+	double weightVector[] = { -2, 1, -3, -1, -1, -1, 1, -1000,1};// The corresponding weightVector, which would be got by learning lots of game object.
 	/*
 	 * FakeSateClass is a class which is similar to the State class. The reason to use such a class is 
 	 * to simulate the make move function and get the field from the State.
@@ -184,6 +185,25 @@ public class PlayerSkeleton {
     		}
     		return totalHeight - totalGrid;
     	}
+    	
+    	public int getRoughness() {
+    		int result = 0;
+    		for (int i = 0; i < COLS-1; i++ )
+    			result += Math.abs(top[i] - top[i+1]);
+    		return result;
+    	}
+    	
+    	public int getWalls(){
+       		int result = 0;
+    		for (int i = 1; i < COLS-1; i++ )
+    			if ((top[i-1] - top[i] >= 2)&&(top[i+1] - top[i] >= 2))
+    				result += Math.min(top[i-1] - top[i],top[i+1] - top[i]);
+    		if (top[1] - top[0] >= 2) result += top[1] - top[0];
+    		if (top[COLS-2] - top[COLS - 1] >= 2) result += top[COLS-2] - top[COLS - 1];
+    		return result;
+    		
+    	}
+
     }
 	
     /*
@@ -244,20 +264,22 @@ public class PlayerSkeleton {
 		for (int i = 10; i< 19; i++){
 //			featureFactor[i] = Math.abs(featureFactor[i-10] - featureFactor[i-9]);
 		}
-		featureFactor[0] = maximumHeight;
-		featureFactor[1] = minimumHeight;
-		featureFactor[2] = maximumHeight - minimumHeight;
-		featureFactor[3] = tmpState.getHoles();
-		featureFactor[4] = mean;
-		featureFactor[5] = variation;
-		featureFactor[6] = tmpState.clearedRowsLastTime;
-		if (tmpState.lost) featureFactor[7] = 1; else featureFactor[7] = 0;
+		//featureFactor[0] = maximumHeight;
+		//featureFactor[1] = maximumHeight - minimumHeight;
+		featureFactor[0] = tmpState.getHoles();
+		//featureFactor[3] = mean;
+		featureFactor[1] = tmpState.clearedRowsLastTime;
+		if (tmpState.lost) featureFactor[2] = 1; else featureFactor[2] = 0;
+		featureFactor[3] = tmpState.getRoughness();
+		featureFactor[4] = tmpState.getWalls();
+		//featureFactor[5] = variation;
 		double finalScore = 0;
-		for (int i = 0; i< 7; i++){
+		for (int i = 0; i< NUM_OF_FEATURES; i++){
 			finalScore += featureFactor[i] * weightVector[i];
 		}
 		return finalScore;
 	}
+
 
 	public int fitnessValue(){
 		State s = new State();
@@ -268,9 +290,11 @@ public class PlayerSkeleton {
 			//s.drawNext(0,0);
 		}
 		
-		System.out.println(s.getRowsCleared());
+		//System.out.println(s.getRowsCleared());
 		return s.getRowsCleared();
 	}
+	
+	
 	
 	public static void main(String[] args) {
 		State s = new State();
@@ -286,7 +310,9 @@ public class PlayerSkeleton {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+		//System.out.println("You have completed "+s.getRowsCleared()+" rows.");
 	}
+
+
 	
 }

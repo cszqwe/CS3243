@@ -37,6 +37,7 @@ public class Population {
 	            newIndividual.importFromString(lines.get(i));
 	            saveIndividual(i, newIndividual);
 	        }
+	    	int a = 0;
     	} catch (IOException e) {
 			System.out.println("Error reading file: " + e.getMessage());
 			return;
@@ -62,12 +63,27 @@ public class Population {
 
     public Individual getFittest() {
         Individual fittest = individuals[0];
+        Thread[] threads= new Thread[size()];
         // Loop through individuals to find fittest
+        
         for (int i = 0; i < size(); i++) {
-            if (fittest.getFitness() <= getIndividual(i).getFitness()) {
-                fittest = getIndividual(i);
+            threads[i] = new Thread(getIndividual(i));
+            threads[i].start();
+        }
+        for (int i = 0; i< size(); i++){
+        	try{
+        		threads[i].join();
+        	}catch (Exception e) {
+                System.out.println("Exception from " + i + ".run");
             }
         }
+        
+        for (int i = 0 ; i < size(); i++){
+        	if (fittest.getFitness() < getIndividual(i).getFitness()){
+        		fittest = getIndividual(i);
+        	}
+        }
+        
         return fittest;
     }
     
