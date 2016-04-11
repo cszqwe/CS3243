@@ -50,7 +50,8 @@ public class Algorithm {
 
         // Mutate population
         for (i = elitismOffset; i < newPopulation.size(); i++) {
-            mutate(newPopulation.getIndividual(i));
+            //mutate(newPopulation.getIndividual(i));
+        	mutateSA(newPopulation.getIndividual(i));
             //newPopulation.getIndividual(i).updateWithGenes();
         }
         //long time3=System.currentTimeMillis();
@@ -93,6 +94,18 @@ public class Algorithm {
         //indiv.updateGenes();
     }
 
+    // Mutate an individual with Simulated Annealing
+    private static void mutateSA(Individual indiv) {
+        // Loop through genes
+        for (int i = 0; i < indiv.size(); i++) {
+            if (Math.random() < mutationRate) {
+                    SimulatedAnnealing sa = new SimulatedAnnealing(indiv , i);
+                   // putFloat(genes, randomVal, i * 8);
+            }
+        }
+        //indiv.updateGenes();
+    }
+    
     // Select individuals for crossover
     private static Individual tournamentSelection(Population pop) {
     	

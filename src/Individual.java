@@ -5,7 +5,7 @@ public class Individual implements Runnable, Comparable<Individual> {
     private PlayerSkeleton player;
     // The fitness value for this individual
     private int fitness = -1;
-    
+    private int fitnessAvg = -1;
     Individual() {
     	
     }
@@ -17,6 +17,7 @@ public class Individual implements Runnable, Comparable<Individual> {
     		this.weightVector[i] = other.weightVector[i];
     	}
     }
+    
     
     public int size(){
     	return defaultGeneLength;
@@ -88,6 +89,24 @@ public class Individual implements Runnable, Comparable<Individual> {
         }
         return fitness;
     }
+    
+    public int getFitnessAvg() {
+    	if (player == null){
+            player = new PlayerSkeleton(weightVector);
+    	}
+        if (fitnessAvg == -1) {
+        	//long time1 = System.currentTimeMillis();
+            //fitness = (player.fitnessValue() + player.fitnessValue() + player.fitnessValue())/3;
+            fitnessAvg = (player.fitnessValue() + player.fitnessValue() + player.fitnessValue());
+        	//long time2 = System.currentTimeMillis();
+            //System.out.println("Time " + (time2 - time1));
+        }else{
+        	return fitnessAvg;
+        }
+        return fitnessAvg;
+    }
+    
+    
     
     public void reset() {
     	player = null;

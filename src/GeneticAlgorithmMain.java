@@ -8,8 +8,8 @@ public class GeneticAlgorithmMain {
 
 
         // Create an initial population
-        //Population myPop = new Population(100, true);
-    	Population myPop = new Population("data/tpop10", Population.DEFAULT_POPULATION);
+        Population myPop = new Population(Population.DEFAULT_POPULATION, true);
+    	//Population myPop = new Population("data/tpop50", Population.DEFAULT_POPULATION);
         // Evolve our population until we reach an optimum solution
         int generationCount = 0;
         long time1 = System.currentTimeMillis();

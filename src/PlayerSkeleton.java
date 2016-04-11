@@ -16,7 +16,7 @@ public class PlayerSkeleton {
 	 * 25 Score in this round
 	 * 26 Lost or not
 	 */
-	static final int NUM_OF_FEATURES = 5;
+	static final int NUM_OF_FEATURES = 6;
 	int firnessScore = -1;
 	double featureFactor[] = new double[NUM_OF_FEATURES];
 	//double weightVector[] = new double[NUM_OF_FEATURES];// The corresponding weightVector, which would be got by learning lots of game object.
@@ -274,7 +274,7 @@ public class PlayerSkeleton {
 		if (tmpState.lost) featureFactor[2] = 1; else featureFactor[2] = 0;
 		featureFactor[3] = tmpState.getRoughness();
 		featureFactor[4] = tmpState.getWalls();
-		//featureFactor[5] = variation;
+		featureFactor[5] = variation;
 		double finalScore = 0;
 		for (int i = 0; i< NUM_OF_FEATURES; i++){
 			finalScore += featureFactor[i] * weightVector[i];
