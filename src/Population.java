@@ -3,6 +3,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Population {
@@ -10,7 +11,7 @@ public class Population {
 	public static final int DEFAULT_POPULATION = 50;
 	
     Individual[] individuals;
-
+    
     /*
      * Constructors
      */
@@ -32,12 +33,17 @@ public class Population {
     	try {
 			List<String> lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.US_ASCII);
 			individuals = new Individual[populationSize];
-	    	for (int i = 0; i < size(); i++) {
+	    	for (int i = 0; i < Math.min(size(), lines.size()); i++) {
 	            Individual newIndividual = new Individual();
 	            newIndividual.importFromString(lines.get(i));
 	            saveIndividual(i, newIndividual);
 	        }
-	    	int a = 0;
+	    	for (int i = Math.min(size(), lines.size()); i < size(); i++) {
+	    		Individual newIndividual = new Individual();
+                newIndividual.generateIndividual();
+                saveIndividual(i, newIndividual);
+	    	}
+
     	} catch (IOException e) {
 			System.out.println("Error reading file: " + e.getMessage());
 			return;
@@ -85,6 +91,38 @@ public class Population {
         }
         
         return fittest;
+    }
+    
+    public void sort() {
+    	Arrays.sort(individuals);
+    }
+    
+    public Individual[] getFittests(int size) {
+        Thread[] threads= new Thread[size()];
+        // Loop through individuals to find fittest
+        
+        for (int i = 0; i < size(); i++) {
+            threads[i] = new Thread(getIndividual(i));
+            threads[i].start();
+        }
+        for (int i = 0; i< size(); i++){
+        	try{
+        		threads[i].join();
+        	}catch (Exception e) {
+                System.out.println("Exception from " + i + ".run");
+            }
+        }
+        
+        sort();
+        Individual[] fittests = Arrays.copyOfRange(individuals, 0, size);
+        
+        return fittests;
+    }
+    
+    public void resetFitness(int superElite) {
+    	for (int i = superElite; i < size(); i++) {
+        	individuals[i].reset();
+        }
     }
     
     /* Public methods */

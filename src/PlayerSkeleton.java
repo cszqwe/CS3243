@@ -19,7 +19,9 @@ public class PlayerSkeleton {
 	static final int NUM_OF_FEATURES = 5;
 	int firnessScore = -1;
 	double featureFactor[] = new double[NUM_OF_FEATURES];
-	double weightVector[] = { -2, 1, -3, -1, -1, -1, 1, -1000,1};// The corresponding weightVector, which would be got by learning lots of game object.
+	//double weightVector[] = new double[NUM_OF_FEATURES];// The corresponding weightVector, which would be got by learning lots of game object.
+	//-49.60378242198775&-10.245403765327232&-160.34072961864766&-1.9745173985707076&-11.484562814456758&-1.9743858472254128
+	double weightVector[] = {-49.60378242198775, -10.245403765327232, -160.34072961864766, -1.9745173985707076, -11.484562814456758, -1.9743858472254128};
 	/*
 	 * FakeSateClass is a class which is similar to the State class. The reason to use such a class is 
 	 * to simulate the make move function and get the field from the State.
@@ -305,7 +307,7 @@ public class PlayerSkeleton {
 			s.draw();
 			s.drawNext(0,0);
 			try {
-				Thread.sleep(300);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

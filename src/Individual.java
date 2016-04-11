@@ -1,10 +1,22 @@
 
-public class Individual implements Runnable {
-    static int defaultGeneLength = PlayerSkeleton.NUM_OF_FEATURES * 8;
+public class Individual implements Runnable, Comparable<Individual> {
+    static int defaultGeneLength = PlayerSkeleton.NUM_OF_FEATURES;
     private double[] weightVector = new double[PlayerSkeleton.NUM_OF_FEATURES];
     private PlayerSkeleton player;
     // The fitness value for this individual
     private int fitness = -1;
+    
+    Individual() {
+    	
+    }
+    
+    Individual(Individual other) { //deep copy
+    	player = other.player;
+    	fitness = other.fitness;
+    	for(int i = 0; i < weightVector.length; ++i) {
+    		this.weightVector[i] = other.weightVector[i];
+    	}
+    }
     
     public int size(){
     	return defaultGeneLength;
@@ -12,6 +24,7 @@ public class Individual implements Runnable {
     
     public void setWeight(int index, double value){
     	weightVector[index] = value;
+    	reset();
     }
     
     public double getWeight(int index){
@@ -75,10 +88,20 @@ public class Individual implements Runnable {
         }
         return fitness;
     }
+    
+    public void reset() {
+    	player = null;
+    	fitness = -1;
+    }
 
 	@Override
 	public void run() {
 		getFitness();
+	}
+
+	@Override
+	public int compareTo(Individual other) {		
+		return other.getFitness() - this.getFitness();
 	}
 
 

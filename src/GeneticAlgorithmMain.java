@@ -9,11 +9,11 @@ public class GeneticAlgorithmMain {
 
         // Create an initial population
         //Population myPop = new Population(100, true);
-    	Population myPop = new Population("data/pop20", 50);
+    	Population myPop = new Population("data/tpop10", Population.DEFAULT_POPULATION);
         // Evolve our population until we reach an optimum solution
         int generationCount = 0;
         long time1 = System.currentTimeMillis();
-        while (myPop.getFittest().getFitness() < 10000000) {
+        while (myPop.getFittest().getFitness() < 10000000 && generationCount <= 5000) {
         	long time2 = System.currentTimeMillis();
             System.out.println("Time " + (time2 - time1));
             time1 = time2;
@@ -24,7 +24,7 @@ public class GeneticAlgorithmMain {
             	try {
 					Files.createDirectory(Paths.get("data"));
 				} catch (IOException e) {
-					System.out.println("Error enter directory: " + e.getMessage());
+					//System.out.println("Error enter directory: " + e.getMessage());
 				}
             	
             	myPop.saveToFile("data/pop" + generationCount);
