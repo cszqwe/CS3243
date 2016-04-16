@@ -21,7 +21,7 @@ public class PlayerSkeleton {
 	double featureFactor[] = new double[NUM_OF_FEATURES];
 	//double weightVector[] = new double[NUM_OF_FEATURES];// The corresponding weightVector, which would be got by learning lots of game object.
 	//-49.60378242198775&-10.245403765327232&-160.34072961864766&-1.9745173985707076&-11.484562814456758&-1.9743858472254128
-	double weightVector[] = {-49.60378242198775, -10.245403765327232, -160.34072961864766, -1.9745173985707076, -11.484562814456758, -1.9743858472254128};
+	double weightVector[] = {-49.60378242198775, -10.245403765327232, -1600000000.34072961864766, -1.9745173985707076, -11.484562814456758, -1.9743858472254128};
 	/*
 	 * FakeSateClass is a class which is similar to the State class. The reason to use such a class is 
 	 * to simulate the make move function and get the field from the State.
@@ -296,22 +296,43 @@ public class PlayerSkeleton {
 		return s.getRowsCleared();
 	}
 	
-	
+	public void get100Runs(){
+		int avg = 0;
+		int sum = 0;
+		int maximum = 0;
+		int minimum = -1;
+		maximum = this.fitnessValue();
+		minimum = maximum;
+		sum += maximum;
+		int tmp = 0;
+		for (int i = 0; i < 100; i++){
+			tmp = this.fitnessValue();
+			sum += tmp;
+			if (tmp > maximum) maximum = tmp;
+			if (tmp < minimum) minimum = tmp;
+
+			System.out.println(i + " " + tmp);
+		}
+		avg = sum/4;
+		System.out.println(avg + " " + maximum+ " "+ minimum);
+	}
 	
 	public static void main(String[] args) {
-		State s = new State();
-		new TFrame(s);
-		PlayerSkeleton p = new PlayerSkeleton();
-		while(!s.hasLost()) {
-			s.makeMove(p.pickMove(s,s.legalMoves()));
-			s.draw();
-			s.drawNext(0,0);
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		PlayerSkeleton PS = new PlayerSkeleton();
+		PS.get100Runs();
+//		State s = new State();
+//		new TFrame(s);
+//		PlayerSkeleton p = new PlayerSkeleton();
+//		while(!s.hasLost()) {
+//			s.makeMove(p.pickMove(s,s.legalMoves()));
+//			s.draw();
+//			s.drawNext(0,0);
+//			try {
+//				Thread.sleep(10);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 		//System.out.println("You have completed "+s.getRowsCleared()+" rows.");
 	}
 

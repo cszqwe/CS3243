@@ -4,7 +4,7 @@ public class Algorithm {
     /* GA parameters */
 	private static final double crossoverRate = 0.6;
     private static final double uniformRate = 0.5;
-    private static final double mutationRate = 0.015;
+    private double mutationRate = 0.015;
     private static final int tournamentSize = 5;
     private static final boolean elitism = true;
     private static final int elitismSize = 3;
@@ -12,7 +12,7 @@ public class Algorithm {
     /* Public methods */
     
     // Evolve a population
-    public static Population evolvePopulation(Population pop) {
+    public Population evolvePopulation(Population pop) {
         Population newPopulation = new Population(pop.size(), false);
         //long startMili=System.currentTimeMillis();
         // Keep our best individual
@@ -50,8 +50,8 @@ public class Algorithm {
 
         // Mutate population
         for (i = elitismOffset; i < newPopulation.size(); i++) {
-            //mutate(newPopulation.getIndividual(i));
-        	mutateSA(newPopulation.getIndividual(i));
+            mutate(newPopulation.getIndividual(i));
+        	//mutateSA(newPopulation.getIndividual(i));
             //newPopulation.getIndividual(i).updateWithGenes();
         }
         //long time3=System.currentTimeMillis();
@@ -79,14 +79,32 @@ public class Algorithm {
             }
         }
     }
-
+    /*
+     * Fitness function for genetic algorithm
+     * Used by SA to test for a good mutate rate
+     */
+    public int fitness(){
+    	Population myPop = new Population(Population.DEFAULT_POPULATION, true);
+    	for (int i = 0; i< 20; i++){
+    		myPop = this.evolvePopulation(myPop);
+    	}
+    	return myPop.getFittest().getFitness();
+    }
+    
+    public double getRate(){
+    	return mutationRate;
+    }
+    
+    public void setRate(double rate){
+    	mutationRate = rate;
+    }
     // Mutate an individual
-    private static void mutate(Individual indiv) {
+    private void mutate(Individual indiv) {
         // Loop through genes
         for (int i = 0; i < indiv.size(); i++) {
-            if (Math.random() < mutationRate) {
-                    double randomVal = (Math.random() - 0.5) * Math.random() * 4000;
-                    double weight = indiv.getWeight(i) + randomVal;
+            if (Math.random() < this.mutationRate) {
+                    double randomVal = (Math.random() - 0.5) * 1000;
+                    double weight = randomVal;
                     indiv.setWeight(i, weight);
                    // putFloat(genes, randomVal, i * 8);
             }
@@ -95,12 +113,13 @@ public class Algorithm {
     }
 
     // Mutate an individual with Simulated Annealing
-    private static void mutateSA(Individual indiv) {
+    private void mutateSA(Individual indiv) {
         // Loop through genes
         for (int i = 0; i < indiv.size(); i++) {
-            if (Math.random() < mutationRate) {
+            if (Math.random() < this.mutationRate) {
                     SimulatedAnnealing sa = new SimulatedAnnealing(indiv , i);
                    // putFloat(genes, randomVal, i * 8);
+                    sa.train();
             }
         }
         //indiv.updateGenes();

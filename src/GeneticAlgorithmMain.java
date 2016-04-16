@@ -4,6 +4,8 @@ import java.nio.file.Paths;
 
 public class GeneticAlgorithmMain {
 
+	
+	
     public static void main(String[] args) {
 
 
@@ -13,13 +15,15 @@ public class GeneticAlgorithmMain {
         // Evolve our population until we reach an optimum solution
         int generationCount = 0;
         long time1 = System.currentTimeMillis();
+        Algorithm myGA = new Algorithm();
+        //System.out.println(myGA.fitness());
         while (myPop.getFittest().getFitness() < 10000000 && generationCount <= 5000) {
         	long time2 = System.currentTimeMillis();
             System.out.println("Time " + (time2 - time1));
             time1 = time2;
             generationCount++;
             System.out.println("Generation: " + generationCount + " Fittest: " + myPop.getFittest().getFitness());
-            myPop = Algorithm.evolvePopulation(myPop);
+            myPop = myGA.evolvePopulation(myPop);
             if (generationCount != 0 && generationCount % 10 == 0) {
             	try {
 					Files.createDirectory(Paths.get("data"));

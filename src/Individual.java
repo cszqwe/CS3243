@@ -106,7 +106,12 @@ public class Individual implements Runnable, Comparable<Individual> {
         return fitnessAvg;
     }
     
-    
+    public int getFitForSa(){
+    	if (player == null){
+            player = new PlayerSkeleton(weightVector);
+    	}
+    	return this.player.fitnessValue();
+    }
     
     public void reset() {
     	player = null;
